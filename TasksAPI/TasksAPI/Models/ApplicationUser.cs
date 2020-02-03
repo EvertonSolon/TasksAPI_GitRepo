@@ -16,6 +16,6 @@ namespace TasksAPI.Models
         public virtual string UserFullName { get; set; }
 
         [ForeignKey("UserId")]
-        public ICollection<Task> Tasks { get; set; }
+        public ICollection<TaskModel> Tasks { get; }
     }
 }
