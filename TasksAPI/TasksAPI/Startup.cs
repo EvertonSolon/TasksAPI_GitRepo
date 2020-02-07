@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TasksAPI.Database;
+using TasksAPI.Ropositories;
+using TasksAPI.Ropositories.Contracts;
 
 namespace TasksAPI
 {
@@ -31,6 +33,10 @@ namespace TasksAPI
             {
                 op.UseSqlite("Data Source=Database\\Tasks.db");
             });
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
