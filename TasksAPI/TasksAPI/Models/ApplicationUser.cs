@@ -13,7 +13,7 @@ namespace TasksAPI.Models
         // Resumo:
         //     Gets or sets the user full name for this user.
         [ProtectedPersonalData]
-        public virtual string UserFullName { get; set; }
+        public virtual string FullName { get; set; }
 
         [ForeignKey("UserId")]
         public virtual ICollection<TaskModel> Tasks { get; }

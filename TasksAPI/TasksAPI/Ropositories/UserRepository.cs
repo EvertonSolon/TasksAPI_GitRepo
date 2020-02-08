@@ -34,7 +34,7 @@ namespace TasksAPI.Ropositories
 
             foreach (var erro in result.Errors)
             {
-                stringBuilder.Append(erro.Description);
+                stringBuilder.AppendLine(erro.Description);
             }
 
             throw new Exception($"Revendedora(a) não cadastrado(a)! {stringBuilder.ToString()}");
