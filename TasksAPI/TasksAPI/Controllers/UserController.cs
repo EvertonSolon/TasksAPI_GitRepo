@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using TasksAPI.Models;
 using TasksAPI.Ropositories.Contracts;
 
@@ -41,9 +44,9 @@ namespace TasksAPI.Controllers
             if (user == null)
                 return NotFound("Usuário não localizado!");
 
-            _signInManager.SignInAsync(user, false);
+            //_signInManager.SignInAsync(user, false); Nâo é mais necessário fazer login dessa forma porque gera cookie.
 
-            return Ok();
+            return Ok(BuildToken(user));
         }
 
         [HttpPost("")]
@@ -73,6 +76,31 @@ namespace TasksAPI.Controllers
 
             return UnprocessableEntity(errors);
 
+        }
+
+        public object BuildToken(ApplicationUser user)
+        {
+            var claims = new[] { 
+            new Claim(JwtRegisteredClaimNames.Aud, user.Email),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("chave-api-jwt-mytasks-secret-login"));
+            var sign = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expMin = DateTime.Now.AddMinutes(10);
+            //var expHour = DateTime.UtcNow.AddHours(1);
+
+            var token = new JwtSecurityToken(
+                issuer: null,
+                audience: null,
+                claims: claims,
+                expires: expMin,
+                signingCredentials: sign
+                );
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return new { token = tokenString, expiration = expMin, refreshToken = "", expirationRefreshToken = expMin};
         }
     }
 }
