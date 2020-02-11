@@ -42,17 +42,16 @@ namespace TasksAPI.Ropositories
         {
             var query = _context.Tasks.Where(x => x.UserId == user.Id).AsQueryable();
 
-            if (lastSyncDate == null || query == null)
-                return null;
-
-            query.Where(x => x.CreatedAt >= lastSyncDate || x.UpdatedAt >= lastSyncDate);
+            if (lastSyncDate != null)
+                query.Where(x => x.CreatedAt >= lastSyncDate || x.UpdatedAt >= lastSyncDate);
 
             return query.ToList();
         }
 
         public List<TaskModel> Sync(List<TaskModel> tasks)
         {
-            var newTasks = tasks.Where(x => x.IdTaskApi == 0);
+            var newTasks = tasks.Where(x => x.IdTaskApi == 0).ToList();
+            var DeletedUpdatedTask = tasks.Where(x => x.IdTaskApi != 0).ToList();
 
             if (newTasks.Count() < 1)
                 return tasks;
@@ -61,8 +60,6 @@ namespace TasksAPI.Ropositories
             {
                 Create(task);
             }
-
-            var DeletedUpdatedTask = tasks.Where(x => x.IdTaskApi != 0);
 
             if (DeletedUpdatedTask.Count() < 1)
                 return tasks;

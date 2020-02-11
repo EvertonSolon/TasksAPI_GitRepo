@@ -27,6 +27,7 @@ namespace TasksAPI.Controllers
             _userManager = userManager;
         }
 
+        [HttpPost("login")]
         public ActionResult Login([FromBody]UserDto userDto)
         {
             ModelState.Remove(nameof(userDto.Name));
@@ -45,6 +46,7 @@ namespace TasksAPI.Controllers
             return Ok();
         }
 
+        [HttpPost("")]
         public ActionResult Create([FromBody]UserDto userDto)
         {
             if (!ModelState.IsValid)
@@ -53,6 +55,7 @@ namespace TasksAPI.Controllers
             var user = new ApplicationUser
             {
                 FullName = userDto.Name,
+                UserName = userDto.Email,
                 Email = userDto.Email
             };
 

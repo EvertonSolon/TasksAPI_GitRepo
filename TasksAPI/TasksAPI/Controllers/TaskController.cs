@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,11 +24,22 @@ namespace TasksAPI.Controllers
             _userManager = userManager;
         }
 
+        [Authorize]
+        [HttpPost("sync")]
         public ActionResult Sync([FromBody]List<TaskModel> tasks)
         {
             return Ok(_taskRepository.Sync(tasks));
         }
 
+        [Authorize]
+        [HttpGet("modelo")]
+        public ActionResult Model()
+        {
+            return Ok(new TaskModel());
+        }
+
+        [Authorize]
+        [HttpGet("syncRestore")]
         public ActionResult SyncRestore(DateTime date)
         {
             var user = _userManager.GetUserAsync(HttpContext.User).Result;
