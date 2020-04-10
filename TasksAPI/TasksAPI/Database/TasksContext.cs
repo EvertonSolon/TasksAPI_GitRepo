@@ -16,5 +16,6 @@ namespace TasksAPI.Database
         }
 
         public DbSet<TaskModel> Tasks { get; set; }
+        public DbSet<TokenModel> Tokens { get; set; }
     }
 }
